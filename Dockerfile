@@ -12,7 +12,7 @@ COPY server/*.txt ./
 RUN pip install --no-cache-dir -r torch-requirements.txt --index-url https://download.pytorch.org/whl/cpu
 RUN pip install --no-cache-dir -r requirements.txt
 COPY server/ ./
-COPY --from=builder /app/client/static ./static
+COPY --from=builder /app/client/build ./static
 COPY model.ckpt .
 
 EXPOSE 80
