@@ -184,7 +184,7 @@
 			width: width,
 			board: apiBoard
 		};
-		let response = await fetch('http://localhost:8090/leastLikelyCell', {
+		let response = await fetch('/leastLikelyCell', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -253,7 +253,6 @@
 	<div id="controls">
 		<button on:click={resetGame}>⟳</button>
 		<button on:click={hint}>💡</button>
-		<button on:click={aiReveal}>AI</button>
 		<button on:click={aiPlay}>▶</button>
 	</div>
 </div>

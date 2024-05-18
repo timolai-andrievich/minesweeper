@@ -16,7 +16,6 @@ class ModelWrapper:
         saved = torch.load(saved_path)
         model_kwargs = saved['model_kwargs']
         state_dict = saved['state_dict']
-        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.device = 'cpu'
         self.model = Net(**model_kwargs).to(self.device)
         self.model.load_state_dict(state_dict)

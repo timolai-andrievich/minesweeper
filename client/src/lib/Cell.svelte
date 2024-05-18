@@ -53,13 +53,13 @@
 	.cell.revealed {
 		background-color: var(--revealed-color);
 	}
-	.cell.hinted {
-		background-color: var(--hinted-color);
-	}
 	.cell.flagged {
 		background-color: var(--flag-color);
 	}
 	.cell.mine {
 		background-color: var(--mine-color);
+	}
+	.cell.hinted {
+		background-color: var(--hinted-color);
 	}
 </style>
