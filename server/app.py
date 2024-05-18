@@ -13,11 +13,11 @@ from minesweeper import Net
 class ModelWrapper:
 
     def __init__(self, saved_path: str):
-        saved = torch.load(saved_path)
+        self.device = 'cpu'
+        saved = torch.load(saved_path, map_location=self.device)
         model_kwargs = saved['model_kwargs']
         state_dict = saved['state_dict']
-        self.device = 'cpu'
-        self.model = Net(**model_kwargs).to(self.device)
+        self.model = Net(**model_kwargs, ).to(self.device)
         self.model.load_state_dict(state_dict)
 
     def least_likely_cell(self):
@@ -85,8 +85,7 @@ def main():
     def least_likely_cell(*args, **kwargs):
         return model.least_likely_cell(*args, **kwargs)
 
-    app.run(port=args.port)
-    # waitress.serve(app, port=args.port)
+    waitress.serve(app, port=args.port)
 
 
 if __name__ == "__main__":
