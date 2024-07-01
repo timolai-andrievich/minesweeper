@@ -52,14 +52,12 @@ class ModelWrapper:
 
 
 class Args:
-    static_path: str
     model_path: str
     port: int
 
 
 def parse_args() -> Args:
     parser = argparse.ArgumentParser()
-    parser.add_argument('--static-path', type=str, required=True)
     parser.add_argument('--model-path', type=str, required=True)
     parser.add_argument('--port', type=int, default=80)
     args = parser.parse_args()
@@ -72,15 +70,7 @@ def main():
     app = Flask(__name__)
     CORS(app)
 
-    @app.route("/")
-    def svelte_base():
-        return send_from_directory(args.static_path, "index.html")
-
-    @app.route("/<path:path>")
-    def svelte_path(path):
-        return send_from_directory(args.static_path, path)
-
-    @app.route("/leastLikelyCell", methods=["POST"])
+    @app.route("/api/leastLikelyCell", methods=["POST"])
     @cross_origin()
     def least_likely_cell(*args, **kwargs):
         return model.least_likely_cell(*args, **kwargs)

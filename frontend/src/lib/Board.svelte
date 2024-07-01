@@ -184,7 +184,7 @@
 			width: width,
 			board: apiBoard
 		};
-		let response = await fetch('/leastLikelyCell', {
+		let response = await fetch('/api/leastLikelyCell', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'

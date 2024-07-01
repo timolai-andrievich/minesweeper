@@ -1,5 +1,18 @@
 services:
-  app:
-    build: .
+  static_files:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+  model_api:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+  reverse_proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "80:80"
+networks:
+  default:
+    driver: bridge
