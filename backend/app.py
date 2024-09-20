@@ -84,6 +84,10 @@ def main() -> None:
     def least_likely_cell(data: BoardData):
         return model.least_likely_cell(data)
 
+    @app.get('/health')
+    def health():
+        return {}
+
     uvicorn.run(app, port=args.port, host=args.host)
 
 
