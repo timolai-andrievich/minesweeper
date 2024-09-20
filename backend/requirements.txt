@@ -1,5 +1,5 @@
-flask==3.0.3
-flask_Cors==4.0.0
 pytorch_lightning==2.2.4
 torchmetrics==1.3.2
-waitress==3.0.0
+fastapi==0.112.0
+pydantic==2.8.2
+uvicorn==0.29.0

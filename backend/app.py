@@ -1,13 +1,24 @@
 import argparse
 
-from flask import Flask, request, abort, send_from_directory
-from flask_cors import CORS, cross_origin
-import waitress
+from fastapi import FastAPI
+from pydantic import BaseModel
 import torch
 import torch.nn.functional as F
+import uvicorn
 
 import minesweeper
 from minesweeper import Net
+
+
+class BoardCell(BaseModel):
+    adjacentMines: int
+    isRevealed: bool
+
+
+class BoardData(BaseModel):
+    width: int
+    height: int
+    board: list[list[BoardCell]]
 
 
 class ModelWrapper:
@@ -20,10 +31,8 @@ class ModelWrapper:
         self.model = Net(**model_kwargs, ).to(self.device)
         self.model.load_state_dict(state_dict)
 
-    def least_likely_cell(self):
-        if not request.is_json:
-            abort(400)
-        data = request.get_json()
+    def least_likely_cell(self, data: BoardData):
+        data = data.model_dump(mode='json')
         board = [[0 for _ in range(data['width'])]
                  for _ in range(data['height'])]
         for row in range(data['height']):
@@ -53,6 +62,7 @@ class ModelWrapper:
 
 class Args:
     model_path: str
+    host: str
     port: int
 
 
@@ -60,23 +70,22 @@ def parse_args() -> Args:
     parser = argparse.ArgumentParser()
     parser.add_argument('--model-path', type=str, required=True)
     parser.add_argument('--port', type=int, default=80)
+    parser.add_argument('--host', type=str, default="0.0.0.0")
     args = parser.parse_args()
     return args
 
 
-def main():
+def main() -> None:
     args = parse_args()
     model = ModelWrapper(args.model_path)
-    app = Flask(__name__)
-    CORS(app)
+    app = FastAPI()
 
-    @app.route("/api/leastLikelyCell", methods=["POST"])
-    @cross_origin()
-    def least_likely_cell(*args, **kwargs):
-        return model.least_likely_cell(*args, **kwargs)
+    @app.post("/api/leastLikelyCell")
+    def least_likely_cell(data: BoardData):
+        return model.least_likely_cell(data)
 
-    waitress.serve(app, port=args.port)
+    uvicorn.run(app, port=args.port, host=args.host)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
