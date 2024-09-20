@@ -1,0 +1,4 @@
+:80 {
+  reverse_proxy /api/* model_api:80
+  reverse_proxy /* static_files:80
+}
