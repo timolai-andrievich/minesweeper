@@ -1,0 +1,76 @@
+:root {
+  /* Themes taken from https://github.com/Gogh-Co/Gogh */
+  /* Catppuccin Mocha */
+  --dark-color-01: #45475a;
+  --dark-color-02: #f38ba8;
+  --dark-color-03: #a6e3a1;
+  --dark-color-04: #f9e2af;
+  --dark-color-05: #89b4fa;
+  --dark-color-06: #f5c2e7;
+  --dark-color-07: #94e2d5;
+  --dark-color-08: #bac2de;
+  --dark-color-09: #585b70;
+  --dark-color-10: #f38ba8;
+  --dark-color-11: #a6e3a1;
+  --dark-color-12: #f9e2af;
+  --dark-color-13: #89b4fa;
+  --dark-color-14: #f5c2e7;
+  --dark-color-15: #94e2d5;
+  --dark-color-16: #a6adc8;
+  --dark-foreground: #cdd6f4;
+  --dark-background: #1e1e2e;
+  --dark-cursor: #cdd6f4;
+
+  /* Catppuccin Latte */
+  --light-color-01: #5c5f77;
+  --light-color-02: #d20f39;
+  --light-color-03: #40a02b;
+  --light-color-04: #df8e1d;
+  --light-color-05: #1e66f5;
+  --light-color-06: #ea76cb;
+  --light-color-07: #179299;
+  --light-color-08: #acb0be;
+  --light-color-09: #6c6f85;
+  --light-color-10: #d20f39;
+  --light-color-11: #40a02b;
+  --light-color-12: #df8e1d;
+  --light-color-13: #1e66f5;
+  --light-color-14: #ea76cb;
+  --light-color-15: #179299;
+  --light-color-16: #bcc0cc;
+  --light-foreground: #4c4f69;
+  --light-background: #eff1f5;
+  --light-cursor: #4c4f69;
+}
+body {
+  --bg-color: var(--light-background);
+  --board-color: var(--light-background);
+  --revealed-color: var(--light-color-16);
+  --hovered-color: var(--light-color-01);
+  --mine-color: var(--light-color-02);
+  --flag-color: var(--light-color-07);
+  --cell-color: var(--light-color-09);
+  --text-color: var(--light-foreground);
+  --button-hover-color: var(--light-color-16);
+  --hinted-color: var(--light-color-05);
+}
+body.dark-mode {
+  --bg-color: var(--dark-background);
+  --board-color: var(--dark-background);
+  --revealed-color: var(--dark-color-16);
+  --mine-color: var(--dark-color-02);
+  --flag-color: var(--dark-color-07);
+  --hovered-color: var(--dark-color-09);
+  --cell-color: var(--dark-color-01);
+  --text-color: var(--dark-foreground);
+  --button-hover-color: var(--dark-color-09);
+  --hinted-color: var(--dark-color-05);
+}
+body {
+  transition: 300ms;
+  background-color: var(--bg-color);
+  --border-size: 0.1rem;
+  --cell-size: 3rem;
+  font-family: "Fira Mono", monospace;
+  color: var(--text-color);
+}
