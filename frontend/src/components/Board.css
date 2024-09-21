@@ -1,0 +1,31 @@
+#container {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+#controls {
+  display: flex;
+  justify-content: center;
+}
+#board {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--board-color);
+  border: var(--border-size);
+}
+.row {
+  display: flex;
+  flex-direction: row;
+}
+button.board {
+  background-color: inherit;
+  color: var(--text-color);
+  border: none;
+  font-family: "Fira Code";
+  font-size: 100pt;
+  width: 100%;
+  transition: 100ms;
+}
+button.board:hover {
+  background-color: var(--button-hover-color);
+}

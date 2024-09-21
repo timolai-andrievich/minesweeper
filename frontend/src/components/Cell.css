@@ -1,0 +1,23 @@
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  background-color: var(--cell-color);
+  font-family: inherit;
+  transition: 100ms;
+  border: solid var(--border-size) var(--board-color);
+}
+.cell:hover {
+  background-color: var(--hovered-color);
+}
+.cell.revealed {
+  background-color: var(--revealed-color);
+}
+.cell.flagged {
+  background-color: var(--flag-color);
+}
+.cell.mine {
+  background-color: var(--mine-color);
+}
+.cell.hinted {
+  background-color: var(--hinted-color);
+}

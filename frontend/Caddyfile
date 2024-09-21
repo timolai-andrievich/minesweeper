@@ -1,4 +1,16 @@
 :80 {
   respond /health "OK" 200
-  file_server
+  header /* {
+    Cache-Control "no-cache, no-store"
+  }
+  handle /assets/* {
+    file_server
+  }
+  handle /favicon.ico {
+    file_server
+  }
+  handle {
+    try_files /* index.html
+    file_server
+  }
 }

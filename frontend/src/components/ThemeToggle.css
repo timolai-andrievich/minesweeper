@@ -1,0 +1,18 @@
+.theme-toggle .react-toggle-track-check,
+.theme-toggle .react-toggle-track-x {
+  display: inline-block;
+  align-content: center;
+}
+
+.theme-toggle .react-toggle-track {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+}
+
+.react-toggle--checked:hover:not(.react-toggle--disabled) .react-toggle-track {
+  background-color: var(--text-color);
+}
+
+.react-toggle:hover:not(.react-toggle--disabled) .react-toggle-track {
+  background-color: var(--text-color);
+}
