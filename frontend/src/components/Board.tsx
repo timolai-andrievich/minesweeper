@@ -118,30 +118,24 @@ function Board(props: BoardProps) {
     row: number,
     col: number,
   ): GameCell[][] {
-    // TODO do not clone the board so much
-    let boardCopy = cloneBoard(board);
     if (row < 0 || row >= props.height || col < 0 || col >= props.width) {
-      return boardCopy;
+      return board;
     }
-    if (
-      finished ||
-      boardCopy[row][col].isRevealed ||
-      boardCopy[row][col].flagged
-    ) {
-      return boardCopy;
+    if (finished || board[row][col].isRevealed || board[row][col].flagged) {
+      return board;
     }
-    boardCopy[row][col].isRevealed = true;
-    if (adjNumbers[row][col] == 0 && !boardCopy[row][col].isMine) {
+    board[row][col].isRevealed = true;
+    if (adjNumbers[row][col] == 0 && !board[row][col].isMine) {
       for (let i = row - 1; i < row + 2; i++) {
         for (let j = col - 1; j < col + 2; j++) {
           if (i == row && j == col) {
             continue;
           }
-          boardCopy = revealCell(boardCopy, i, j);
+          board = revealCell(board, i, j);
         }
       }
     }
-    return boardCopy;
+    return board;
   }
 
   function revealCellWrapper(row: number, col: number) {
