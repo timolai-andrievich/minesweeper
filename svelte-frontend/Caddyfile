@@ -1,0 +1,4 @@
+:80 {
+  respond /health "OK" 200
+  file_server
+}

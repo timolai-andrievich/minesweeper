@@ -24,7 +24,7 @@ function Cell(props: CellProps) {
     }
   }
 
-  const mine = props.mine ? "mine" : "";
+  const mine = props.mine && props.revealed ? "mine" : "";
   const revealed = props.revealed ? "revealed" : "";
   const flagged = props.flagged ? "flagged" : "";
   const hinted = props.hinted ? "hinted" : "";
@@ -39,6 +39,7 @@ function Cell(props: CellProps) {
           props.onFlagged();
         }
       }}
+      onContextMenu={(e) => e.preventDefault()}
     >
       {getText()}
     </button>

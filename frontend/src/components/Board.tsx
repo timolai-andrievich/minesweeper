@@ -1,6 +1,6 @@
 import Cell from "./Cell";
 import "./Board.css";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 interface BoardProps {
   height: number;
   width: number;
@@ -18,6 +18,10 @@ class GameCell {
     this.flagged = false;
     this.hinted = false;
   }
+}
+
+function cloneBoard(board: GameCell[][]): GameCell[][] {
+  return JSON.parse(JSON.stringify(board));
 }
 
 function Board(props: BoardProps) {
@@ -94,46 +98,62 @@ function Board(props: BoardProps) {
     return wonFlag;
   }
 
-  const [board, setBoard] = useState<GameCell[][]>([]);
-  const [adjNumbers, setAdjNumbers] = useState<number[][]>([]);
+  const [board, setBoard] = useState<GameCell[][]>(
+    generateBoard(props.height, props.width, props.mines),
+  );
+  const [adjNumbers, setAdjNumbers] = useState<number[][]>(
+    calculateNumbers(board),
+  );
   const [firstClick, setFirstClick] = useState<boolean>(true);
-  const [finished, setFinished] = useState<boolean>(false);
+  const [finished, setFinished] = useState<boolean>(checkFinished(board));
 
   function updateBoard(newBoard: GameCell[][]) {
-    console.log(`Setting board:`);
-    console.log(setBoard);
-    console.log(newBoard);
     setBoard(newBoard);
-    console.log(`Set board:`);
-    console.log(board);
-    setAdjNumbers(calculateNumbers(board));
-    setFinished(checkFinished(board));
+    setAdjNumbers(calculateNumbers(newBoard));
+    setFinished(checkFinished(newBoard));
   }
 
-  function revealCell(row: number, col: number) {
-    console.log(`Revealing ${row}, ${col}`)
-    let boardCopy = structuredClone(board);
+  function revealCell(
+    board: GameCell[][],
+    row: number,
+    col: number,
+  ): GameCell[][] {
+    // TODO do not clone the board so much
+    let boardCopy = cloneBoard(board);
     if (row < 0 || row >= props.height || col < 0 || col >= props.width) {
-      return;
+      return boardCopy;
     }
-    if (firstClick) {
-      while (board[row][col].isMine) {
-        reset();
-      }
-      setFirstClick(false);
-    }
-    if (finished || board[row][col].isRevealed || board[row][col].flagged) {
-      return;
+    if (
+      finished ||
+      boardCopy[row][col].isRevealed ||
+      boardCopy[row][col].flagged
+    ) {
+      return boardCopy;
     }
     boardCopy[row][col].isRevealed = true;
-    if (adjNumbers[row][col] == 0 && !board[row][col].isMine) {
+    if (adjNumbers[row][col] == 0 && !boardCopy[row][col].isMine) {
       for (let i = row - 1; i < row + 2; i++) {
         for (let j = col - 1; j < col + 2; j++) {
-          revealCell(i, j);
+          if (i == row && j == col) {
+            continue;
+          }
+          boardCopy = revealCell(boardCopy, i, j);
         }
       }
     }
-    updateBoard(boardCopy);
+    return boardCopy;
+  }
+
+  function revealCellWrapper(row: number, col: number) {
+    let newBoard = cloneBoard(board);
+    if (firstClick) {
+      while (newBoard[row][col].isMine) {
+        newBoard = generateBoard(props.height, props.width, props.mines);
+      }
+      setFirstClick(false);
+    }
+    newBoard = revealCell(newBoard, row, col);
+    updateBoard(newBoard);
   }
 
   function reset() {
@@ -141,7 +161,7 @@ function Board(props: BoardProps) {
   }
 
   function flagCell(row: number, col: number) {
-    let newBoard = structuredClone(board);
+    let newBoard = cloneBoard(board);
     if (finished || board[row][col].isRevealed) {
       return;
     }
@@ -188,7 +208,7 @@ function Board(props: BoardProps) {
     if (finished) {
       return;
     }
-    let newBoard = structuredClone(board);
+    let newBoard = cloneBoard(board);
     let coords = await getLeastLikelyCell();
     for (let row = 0; row < props.height; row++) {
       for (let col = 0; col < props.width; col++) {
@@ -204,37 +224,23 @@ function Board(props: BoardProps) {
       return;
     }
     let coords = await getLeastLikelyCell();
-    revealCell(coords[0], coords[1]);
+    revealCellWrapper(coords[0], coords[1]);
   }
 
-  async function play() {
-    while (!finished) {
-      await aiReveal();
-      await new Promise((r) => setTimeout(r, 20));
-    }
-  }
-
-  const [rendered, setRendered] = useState(false);
   const [renderedCells, setRenderedCells] = useState<ReactNode[]>([]);
   function renderCells() {
-    if (rendered) {
-      return;
-    }
-    setRendered(true);
-    console.log("rendering")
-    reset();
     let cells = [];
     for (let row = 0; row < props.height; row++) {
       let rowArray = [];
       for (let col = 0; col < props.width; col++) {
         rowArray.push(
           <Cell
-            mine={false}
-            revealed={false}
-            flagged={false}
-            hinted={false}
-            adjacentMines={0}
-            onReveal={() => revealCell(row, col)}
+            mine={board[row][col].isMine}
+            revealed={board[row][col].isRevealed}
+            flagged={board[row][col].flagged}
+            hinted={board[row][col].hinted}
+            adjacentMines={adjNumbers[row][col]}
+            onReveal={() => revealCellWrapper(row, col)}
             onFlagged={() => flagCell(row, col)}
             key={`${row}|${col}`}
           />,
@@ -248,7 +254,7 @@ function Board(props: BoardProps) {
     }
     setRenderedCells(cells);
   }
-  renderCells();
+  useEffect(renderCells, [board]);
   return (
     <>
       <div id="container">
@@ -260,7 +266,7 @@ function Board(props: BoardProps) {
           <button className="board" onClick={hint}>
             💡
           </button>
-          <button className="board" onClick={play}>
+          <button className="board" onClick={aiReveal}>
             ▶
           </button>
         </div>
